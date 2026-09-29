@@ -60,4 +60,14 @@ The application strictly implements .NET MAUI layout containers:
    ```bash
    git clone https://github.com/felixxkamdjo/MauiCalculator.git
    cd MauiCalculator
-   ```
+    ```
+
+2. **Restore dependencies:**
+    ```bash
+    dotnet restore
+    ```
+
+3. **Deploy to a connected Android device:**
+    ```bash
+    dotnet build -t:Run -f net10.0-android
+    ```
