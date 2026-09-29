@@ -4,12 +4,22 @@ namespace MauiCalculator;
 
 public partial class ConverterPage : ContentPage
 {
-    private int _currentCategory = 0; // 0: Longueur, 1: Masse, 2: Température
+    private int _currentCategory = 0; // 0: Length, 1: Mass, 2: Temperature
 
     public ConverterPage()
     {
         InitializeComponent();
         SetCategory(0);
+        StartCursorBlink();
+    }
+
+    private async void StartCursorBlink()
+    {
+        while (true)
+        {
+            lblConverterCursor.Opacity = lblConverterCursor.Opacity == 0 ? 1 : 0;
+            await Task.Delay(500);
+        }
     }
 
     private async void OnCalculatorTabTapped(object sender, EventArgs e)
@@ -29,7 +39,6 @@ public partial class ConverterPage : ContentPage
     {
         _currentCategory = index;
 
-        // Mise à jour visuelle des boutons onglets (pills)
         btnCatLength.BackgroundColor = index == 0 ? Color.FromArgb("#512BD4") : Color.FromArgb("#1C1C1E");
         btnCatLength.TextColor = index == 0 ? Colors.White : Color.FromArgb("#A1A1AA");
 
@@ -45,13 +54,13 @@ public partial class ConverterPage : ContentPage
         switch (index)
         {
             case 0:
-                string[] lengths = ["Mètre (m)", "Kilomètre (km)", "Centimètre (cm)", "Millimètre (mm)", "Mile (mi)"];
+                string[] lengths = ["Meter (m)", "Kilometer (km)", "Centimeter (cm)", "Millimeter (mm)", "Mile (mi)"];
                 foreach (var item in lengths) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
                 pickerFrom.SelectedIndex = 0;
                 pickerTo.SelectedIndex = 1;
                 break;
             case 1:
-                string[] masses = ["Kilogramme (kg)", "Gramme (g)", "Milligramme (mg)", "Livre (lb)"];
+                string[] masses = ["Kilogram (kg)", "Gram (g)", "Milligram (mg)", "Pound (lb)"];
                 foreach (var item in masses) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
                 pickerFrom.SelectedIndex = 0;
                 pickerTo.SelectedIndex = 1;
@@ -140,21 +149,20 @@ public partial class ConverterPage : ContentPage
 
         double result = 0;
 
-        if (_currentCategory == 0) // Longueurs (Base: mètre)
+        if (_currentCategory == 0) // Length
         {
             double[] toBase = [1.0, 1000.0, 0.01, 0.001, 1609.344];
             double meters = input * toBase[from];
             result = meters / toBase[to];
         }
-        else if (_currentCategory == 1) // Masses (Base: gramme)
+        else if (_currentCategory == 1) // Mass
         {
             double[] toBase = [1000.0, 1.0, 0.001, 453.59237];
             double grams = input * toBase[from];
             result = grams / toBase[to];
         }
-        else if (_currentCategory == 2) // Températures
+        else if (_currentCategory == 2) // Temperature
         {
-            // Conversion vers Celsius d'abord
             double celsius = from switch
             {
                 0 => input,
@@ -163,7 +171,6 @@ public partial class ConverterPage : ContentPage
                 _ => input
             };
 
-            // Conversion depuis Celsius vers cible
             result = to switch
             {
                 0 => celsius,

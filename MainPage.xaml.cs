@@ -9,9 +9,25 @@ public partial class MainPage : ContentPage
     private bool _isNewEntry = true;
     private bool _hasError = false;
 
+    // Multiplication symbol normalization
+    private const string MultiplySign = "×";
+    private const string DivideSign = "÷";
+    private const string AddSign = "+";
+    private const string SubtractSign = "-";
+
     public MainPage()
     {
         InitializeComponent();
+        StartCursorBlink();
+    }
+
+    private async void StartCursorBlink()
+    {
+        while (true)
+        {
+            lblCursor.Opacity = lblCursor.Opacity == 0 ? 1 : 0;
+            await Task.Delay(500);
+        }
     }
 
     private void OnDigitClicked(object sender, EventArgs e)
@@ -52,7 +68,7 @@ public partial class MainPage : ContentPage
         if (_hasError) return;
 
         var button = (Button)sender;
-        string selectedOp = button.Text;
+        string selectedOp = button.Text.Trim();
 
         if (!string.IsNullOrEmpty(_currentOperator) && !_isNewEntry)
         {
@@ -86,19 +102,22 @@ public partial class MainPage : ContentPage
 
         switch (_currentOperator)
         {
-            case "+":
+            case AddSign:
                 result = _firstOperand + secondOperand;
                 break;
-            case "-":
+            case SubtractSign:
                 result = _firstOperand - secondOperand;
                 break;
+            case MultiplySign:
+            case "*":
             case "x":
                 result = _firstOperand * secondOperand;
                 break;
-            case "÷":
+            case DivideSign:
+            case "/":
                 if (secondOperand == 0)
                 {
-                    lblDisplay.Text = "Division by 0 is not possible";
+                    lblDisplay.Text = "Cannot divide by 0";
                     lblEquation.Text = string.Empty;
                     _hasError = true;
                     return;
@@ -127,7 +146,6 @@ public partial class MainPage : ContentPage
             HorizontalTextAlignment = TextAlignment.End
         };
 
-        // Allows you to click on a previous calculation to retrieve its result
         var tap = new TapGestureRecognizer();
         tap.Tapped += (s, e) =>
         {
@@ -141,8 +159,6 @@ public partial class MainPage : ContentPage
         historyLabel.GestureRecognizers.Add(tap);
 
         historyContainer.Children.Add(historyLabel);
-        
-        // Auto-scroll down
         _ = scrollHistory.ScrollToAsync(historyContainer, ScrollToPosition.End, animated: true);
     }
 
@@ -190,24 +206,14 @@ public partial class MainPage : ContentPage
         }
     }
 
-    private void ResetCalculator()
-    {
-        lblDisplay.Text = "0";
-        lblEquation.Text = string.Empty;
-        _firstOperand = 0;
-        _currentOperator = string.Empty;
-        _isNewEntry = true;
-        _hasError = false;
-    }
-
-	private void OnSqrtClicked(object sender, EventArgs e)
+    private void OnSqrtClicked(object sender, EventArgs e)
     {
         if (_hasError) return;
         if (double.TryParse(lblDisplay.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
         {
             if (val < 0)
             {
-                lblDisplay.Text = "Error: Negative root";
+                lblDisplay.Text = "Invalid input";
                 _hasError = true;
                 return;
             }
@@ -237,7 +243,7 @@ public partial class MainPage : ContentPage
         {
             if (val == 0)
             {
-                lblDisplay.Text = "Division by 0 is not possible";
+                lblDisplay.Text = "Cannot divide by 0";
                 _hasError = true;
                 return;
             }
@@ -255,18 +261,34 @@ public partial class MainPage : ContentPage
         _isNewEntry = true;
     }
 
-    private async void OnOptionsMenuTapped(object sender, EventArgs e)
+    private void ResetCalculator()
     {
-        string action = await DisplayActionSheet("Options", "Cancel", null, "Clear calculation history");
-        if (action == "Clear calculation history")
-        {
-            historyContainer.Children.Clear();
-        }
+        lblDisplay.Text = "0";
+        lblEquation.Text = string.Empty;
+        _firstOperand = 0;
+        _currentOperator = string.Empty;
+        _isNewEntry = true;
+        _hasError = false;
+    }
+
+    private void OnOpenModalClicked(object sender, EventArgs e)
+    {
+        modalOverlay.IsVisible = true;
+    }
+
+    private void OnCloseModalClicked(object sender, EventArgs e)
+    {
+        modalOverlay.IsVisible = false;
+    }
+
+    private void OnConfirmClearHistoryClicked(object sender, EventArgs e)
+    {
+        historyContainer.Children.Clear();
+        modalOverlay.IsVisible = false;
     }
 
     private async void OnConverterTabTapped(object sender, EventArgs e)
     {
-        // Navigate to the conversion page - in comming
         await Shell.Current.GoToAsync("//ConverterPage");
     }
 }

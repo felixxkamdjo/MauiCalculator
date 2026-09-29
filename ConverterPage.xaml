@@ -6,10 +6,10 @@
              Shell.TabBarIsVisible="False"
              BackgroundColor="#000000">
 
-    <Grid RowDefinitions="Auto, Auto, *, 320" Padding="16, 12, 16, 8" RowSpacing="12">
+    <Grid RowDefinitions="Auto, Auto, *, 330" Padding="16, 12, 16, 16" RowSpacing="12">
 
-        <!-- 1. En-tête : Onglets de navigation -->
-        <Grid Grid.Row="0" Margin="0, 6, 0, 4">
+        <!-- 1. Header: Navigation Tabs -->
+        <Grid Grid.Row="0" Margin="0, 4, 0, 4">
             <HorizontalStackLayout Spacing="24" VerticalOptions="Center">
                 <Label Text="Calculator"
                        FontSize="20"
@@ -26,35 +26,38 @@
             </HorizontalStackLayout>
         </Grid>
 
-        <!-- 2. Puces de catégories horizontales (Pills) -->
+        <!-- 2. Category Filter Pills -->
         <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
             <HorizontalStackLayout Spacing="8">
-                <Button x:Name="btnCatLength" Text="Longueur" Clicked="OnCategorySelected"
-                        BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
-                <Button x:Name="btnCatMass" Text="Masse" Clicked="OnCategorySelected"
-                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
-                <Button x:Name="btnCatTemp" Text="Température" Clicked="OnCategorySelected"
-                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
+                <Button x:Name="btnCatLength" Text="Length" Clicked="OnCategorySelected"
+                        BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="20" HeightRequest="38" Padding="16, 0" />
+                <Button x:Name="btnCatMass" Text="Mass" Clicked="OnCategorySelected"
+                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="16, 0" />
+                <Button x:Name="btnCatTemp" Text="Temperature" Clicked="OnCategorySelected"
+                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="16, 0" />
             </HorizontalStackLayout>
         </ScrollView>
 
-        <!-- 3. Cartes d'unités (Source et Cible) -->
-        <VerticalStackLayout Grid.Row="2" Spacing="8" VerticalOptions="Center">
+        <!-- 3. Conversion Cards (Source & Target with Active Cursor) -->
+        <VerticalStackLayout Grid.Row="2" Spacing="10" VerticalOptions="Center">
             
-            <!-- Carte Source -->
-            <Border Stroke="#27272A" StrokeThickness="1" StrokeShape="RoundRectangle 16" BackgroundColor="#141416" Padding="14, 10">
+            <!-- Source Card -->
+            <Border Stroke="#27272A" StrokeThickness="1" StrokeShape="RoundRectangle 18" BackgroundColor="#141416" Padding="16, 12">
                 <Grid ColumnDefinitions="Auto, *">
                     <Picker x:Name="pickerFrom" Grid.Column="0" TextColor="#A1A1AA" FontSize="16" SelectedIndexChanged="OnUnitChanged" />
-                    <Label x:Name="lblFromVal" Grid.Column="1" Text="1" FontSize="36" FontAttributes="Bold" TextColor="#FFFFFF" HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
+                    <HorizontalStackLayout Grid.Column="1" HorizontalOptions="End" VerticalOptions="Center">
+                        <Label x:Name="lblFromVal" Text="1" FontSize="36" FontAttributes="Bold" TextColor="#FFFFFF" VerticalTextAlignment="Center" />
+                        <Label x:Name="lblConverterCursor" Text="|" FontSize="36" TextColor="#512BD4" FontAttributes="Bold" VerticalTextAlignment="Center" />
+                    </HorizontalStackLayout>
                 </Grid>
             </Border>
 
-            <!-- Bouton d'inversion rapide -->
-            <Button Text="⇅ Inverser" Clicked="OnSwapUnitsClicked"
+            <!-- Swap Units Button -->
+            <Button Text="⇅ Swap" Clicked="OnSwapUnitsClicked"
                     BackgroundColor="Transparent" TextColor="#6D3EE4" FontSize="14" HorizontalOptions="Center" HeightRequest="32" Padding="0" />
 
-            <!-- Carte Cible -->
-            <Border Stroke="#512BD4" StrokeThickness="1.5" StrokeShape="RoundRectangle 16" BackgroundColor="#18181B" Padding="14, 10">
+            <!-- Target Result Card -->
+            <Border Stroke="#512BD4" StrokeThickness="1.5" StrokeShape="RoundRectangle 18" BackgroundColor="#18181B" Padding="16, 12">
                 <Grid ColumnDefinitions="Auto, *">
                     <Picker x:Name="pickerTo" Grid.Column="0" TextColor="#A1A1AA" FontSize="16" SelectedIndexChanged="OnUnitChanged" />
                     <Label x:Name="lblToVal" Grid.Column="1" Text="1000" FontSize="36" FontAttributes="Bold" TextColor="#FAFAFA" HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
@@ -62,7 +65,7 @@
             </Border>
         </VerticalStackLayout>
 
-        <!-- 4. Clavier de saisie direct (intégré pour fluidité mobile) -->
+        <!-- 4. Tactile Keypad -->
         <Grid Grid.Row="3" RowSpacing="8" ColumnSpacing="10">
             <Grid.RowDefinitions>
                 <RowDefinition Height="*" />
