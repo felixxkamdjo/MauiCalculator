@@ -92,13 +92,13 @@ public partial class MainPage : ContentPage
             case "-":
                 result = _firstOperand - secondOperand;
                 break;
-            case "×":
+            case "x":
                 result = _firstOperand * secondOperand;
                 break;
             case "÷":
                 if (secondOperand == 0)
                 {
-                    lblDisplay.Text = "Division par 0 impossible";
+                    lblDisplay.Text = "Division by 0 is not possible";
                     lblEquation.Text = string.Empty;
                     _hasError = true;
                     return;
@@ -109,9 +109,41 @@ public partial class MainPage : ContentPage
                 return;
         }
 
+        string equationText = $"{_firstOperand} {_currentOperator} {secondOperand} = {result.ToString(CultureInfo.InvariantCulture)}";
+        AddHistoryItem(equationText);
+
         lblDisplay.Text = result.ToString(CultureInfo.InvariantCulture);
         _firstOperand = result;
         _isNewEntry = true;
+    }
+
+    private void AddHistoryItem(string entry)
+    {
+        var historyLabel = new Label
+        {
+            Text = entry,
+            FontSize = 18,
+            TextColor = Color.FromArgb("#71717A"),
+            HorizontalTextAlignment = TextAlignment.End
+        };
+
+        // Allows you to click on a previous calculation to retrieve its result
+        var tap = new TapGestureRecognizer();
+        tap.Tapped += (s, e) =>
+        {
+            string[] parts = entry.Split('=');
+            if (parts.Length == 2)
+            {
+                lblDisplay.Text = parts[1].Trim();
+                _isNewEntry = true;
+            }
+        };
+        historyLabel.GestureRecognizers.Add(tap);
+
+        historyContainer.Children.Add(historyLabel);
+        
+        // Auto-scroll down
+        _ = scrollHistory.ScrollToAsync(historyContainer, ScrollToPosition.End, animated: true);
     }
 
     private void OnClearClicked(object sender, EventArgs e)
@@ -140,8 +172,9 @@ public partial class MainPage : ContentPage
 
         if (double.TryParse(lblDisplay.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
         {
-            val /= 100.0;
-            lblDisplay.Text = val.ToString(CultureInfo.InvariantCulture);
+            double res = val / 100.0;
+            AddHistoryItem($"{val}% = {res.ToString(CultureInfo.InvariantCulture)}");
+            lblDisplay.Text = res.ToString(CultureInfo.InvariantCulture);
             _isNewEntry = true;
         }
     }
@@ -165,5 +198,20 @@ public partial class MainPage : ContentPage
         _currentOperator = string.Empty;
         _isNewEntry = true;
         _hasError = false;
+    }
+
+    private async void OnOptionsMenuTapped(object sender, EventArgs e)
+    {
+        string action = await DisplayActionSheet("Options", "Cancel", null, "Clear calculation history");
+        if (action == "Effacer l'historique des calculs")
+        {
+            historyContainer.Children.Clear();
+        }
+    }
+
+    private async void OnConverterTabTapped(object sender, EventArgs e)
+    {
+        // Navigate to the conversion page - in comming
+        await Shell.Current.GoToAsync("//ConverterPage");
     }
 }
