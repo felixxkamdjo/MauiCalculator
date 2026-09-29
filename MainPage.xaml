@@ -3,13 +3,13 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiCalculator.MainPage"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="#000000">
 
-    <!-- build the main grid -->
-    <Grid RowDefinitions="Auto, *, Auto" Padding="20, 16, 20, 20">
+    <Grid RowDefinitions="Auto, *, 400" Padding="16, 12, 16, 8" RowSpacing="12">
 
-        <!-- build the top tab bar -->
-        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0, 10, 0, 10">
+        <!-- 1. En-tête : Onglets Calculator / Converter & Menu -->
+        <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0, 6, 0, 4">
             <HorizontalStackLayout Grid.Column="0" Spacing="24" VerticalOptions="Center">
                 <Label Text="Calculator"
                        FontSize="20"
@@ -25,7 +25,6 @@
                 </Label>
             </HorizontalStackLayout>
 
-            <!-- open the options menu -->
             <Label Grid.Column="1"
                    Text="⋮"
                    FontSize="24"
@@ -38,46 +37,43 @@
             </Label>
         </Grid>
 
-        <!-- display the calculation history -->
+        <!-- 2. Zone d'historique + calcul courant avec défilement -->
         <ScrollView Grid.Row="1"
                     x:Name="scrollHistory"
                     VerticalOptions="End"
-                    VerticalScrollBarVisibility="Never"
-                    Margin="0, 10, 0, 16">
-            
-            <!-- stack the history rows -->
-            <VerticalStackLayout Spacing="10" HorizontalOptions="Fill">
-                
-                <!-- insert previous calculations -->
-                <VerticalStackLayout x:Name="historyContainer" Spacing="8" />
+                    VerticalScrollBarVisibility="Never">
+            <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
+                <VerticalStackLayout x:Name="historyContainer" Spacing="6" />
 
-                <!-- display the current equation -->
                 <Label x:Name="lblEquation"
                        Text=""
-                       FontSize="22"
+                       FontSize="20"
                        TextColor="#A1A1AA"
                        HorizontalTextAlignment="End" />
 
-                <!-- display the current result -->
-                <Label x:Name="lblDisplay"
-                       Text="0"
-                       FontSize="52"
-                       FontAttributes="Bold"
-                       TextColor="#FFFFFF"
-                       HorizontalTextAlignment="End" />
+                <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+                    <Label x:Name="lblDisplay"
+                           Text="0"
+                           FontSize="48"
+                           FontAttributes="Bold"
+                           TextColor="#FFFFFF"
+                           HorizontalTextAlignment="End" />
+                </ScrollView>
             </VerticalStackLayout>
         </ScrollView>
 
-
-        <!-- build the numeric keypad -->
-        <Grid Grid.Row="2" RowSpacing="10" ColumnSpacing="10">
+        <!-- 3. Pavé tactile qui occupe tout l'espace bas -->
+        <Grid Grid.Row="2"
+              RowSpacing="8"
+              ColumnSpacing="10"
+              VerticalOptions="FillAndExpand">
             <Grid.RowDefinitions>
-                <RowDefinition Height="56" />
-                <RowDefinition Height="60" />
-                <RowDefinition Height="60" />
-                <RowDefinition Height="60" />
-                <RowDefinition Height="60" />
-                <RowDefinition Height="60" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -86,17 +82,17 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <!-- display row 0 -->
+            <!-- Ligne 0 : Scientifique -->
             <Button Text="√" Grid.Row="0" Grid.Column="0" Clicked="OnSqrtClicked"
-                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="20" />
+                    BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="19" />
             <Button Text="x²" Grid.Row="0" Grid.Column="1" Clicked="OnSquareClicked"
-                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="18" />
+                    BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="17" />
             <Button Text="1/x" Grid.Row="0" Grid.Column="2" Clicked="OnReciprocalClicked"
-                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="16" />
+                    BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="15" />
             <Button Text="π" Grid.Row="0" Grid.Column="3" Clicked="OnPiClicked"
-                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="18" />
+                    BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="17" />
 
-            <!-- display row 1: controls & division -->
+            <!-- Ligne 1 : Fonctions & Division -->
             <Button Text="C" Grid.Row="1" Grid.Column="0" Clicked="OnClearClicked"
                     BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
             <Button Text="⌫" Grid.Row="1" Grid.Column="1" Clicked="OnDeleteClicked"
@@ -106,43 +102,43 @@
             <Button Text="÷" Grid.Row="1" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
 
-            <!-- display row 2 -->
+            <!-- Ligne 2 -->
             <Button Text="7" Grid.Row="2" Grid.Column="0" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="8" Grid.Row="2" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="9" Grid.Row="2" Grid.Column="2" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="×" Grid.Row="2" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
 
-            <!-- display row 3 -->
+            <!-- Ligne 3 -->
             <Button Text="4" Grid.Row="3" Grid.Column="0" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="5" Grid.Row="3" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="6" Grid.Row="3" Grid.Column="2" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="-" Grid.Row="3" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="26" FontAttributes="Bold" />
 
-            <!-- display row 4 -->
+            <!-- Ligne 4 -->
             <Button Text="1" Grid.Row="4" Grid.Column="0" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="2" Grid.Row="4" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="3" Grid.Row="4" Grid.Column="2" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="+" Grid.Row="4" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
 
-            <!-- display row 5 -->
+            <!-- Ligne 5 -->
             <Button Text="±" Grid.Row="5" Grid.Column="0" Clicked="OnNegateClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" />
             <Button Text="0" Grid.Row="5" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="." Grid.Row="5" Grid.Column="2" Clicked="OnDecimalClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+                    BackgroundColor="#141416" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
             <Button Text="=" Grid.Row="5" Grid.Column="3" Clicked="OnEqualsClicked"
                     BackgroundColor="#6D3EE4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
         </Grid>

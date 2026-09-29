@@ -3,99 +3,98 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiCalculator.ConverterPage"
              Shell.NavBarIsVisible="False"
+             Shell.TabBarIsVisible="False"
              BackgroundColor="#000000">
 
-    <Grid RowDefinitions="Auto, *" Padding="20, 16, 20, 20" RowSpacing="20">
-        
-        <!-- En-tête avec onglets de retour -->
-        <HorizontalStackLayout Grid.Row="0" Spacing="24" Margin="0, 10, 0, 0">
-            <Label Text="Calculator"
-                   FontSize="20"
-                   TextColor="#71717A"
-                   VerticalTextAlignment="Center">
-                <Label.GestureRecognizers>
-                    <TapGestureRecognizer Tapped="OnCalculatorTabTapped" />
-                </Label.GestureRecognizers>
-            </Label>
-            <Label Text="Converter"
-                   FontSize="20"
-                   FontAttributes="Bold"
-                   TextColor="#FFFFFF" />
-        </HorizontalStackLayout>
+    <Grid RowDefinitions="Auto, Auto, *, 320" Padding="16, 12, 16, 8" RowSpacing="12">
 
-        <!-- Corps du convertisseur -->
-        <ScrollView Grid.Row="1" VerticalScrollBarVisibility="Never">
-            <VerticalStackLayout Spacing="24">
+        <!-- 1. En-tête : Onglets de navigation -->
+        <Grid Grid.Row="0" Margin="0, 6, 0, 4">
+            <HorizontalStackLayout Spacing="24" VerticalOptions="Center">
+                <Label Text="Calculator"
+                       FontSize="20"
+                       TextColor="#71717A"
+                       VerticalTextAlignment="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnCalculatorTabTapped" />
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Text="Converter"
+                       FontSize="20"
+                       FontAttributes="Bold"
+                       TextColor="#FFFFFF" />
+            </HorizontalStackLayout>
+        </Grid>
 
-                <!-- Sélecteur de type d'unité -->
-                <Border Stroke="#27272A"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 16"
-                        BackgroundColor="#18181B"
-                        Padding="14, 4">
-                    <Picker x:Name="pickerCategory"
-                            TextColor="#FAFAFA"
-                            Title="Sélectionnez une catégorie"
-                            TitleColor="#71717A"
-                            SelectedIndexChanged="OnCategoryChanged">
-                        <Picker.ItemsSource>
-                            <x:Array Type="{x:Type x:String}">
-                                <x:String>Longueur (m ⇄ km ⇄ cm)</x:String>
-                                <x:String>Masse (kg ⇄ g ⇄ lb)</x:String>
-                                <x:String>Température (°C ⇄ °F)</x:String>
-                            </x:Array>
-                        </Picker.ItemsSource>
-                    </Picker>
-                </Border>
-
-                <!-- Bloc d'entrée (Source) -->
-                <Border Stroke="#27272A"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 20"
-                        BackgroundColor="#18181B"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="8">
-                        <Picker x:Name="pickerFromUnit"
-                                TextColor="#A1A1AA"
-                                SelectedIndexChanged="OnInputValuesChanged" />
-                        <Entry x:Name="txtFromValue"
-                               Text="1"
-                               Keyboard="Numeric"
-                               FontSize="32"
-                               FontAttributes="Bold"
-                               TextColor="#FFFFFF"
-                               BackgroundColor="Transparent"
-                               HorizontalTextAlignment="End"
-                               TextChanged="OnInputValuesChanged" />
-                    </VerticalStackLayout>
-                </Border>
-
-                <!-- Icône d'inversion -->
-                <Label Text="⇅"
-                       FontSize="26"
-                       TextColor="#512BD4"
-                       HorizontalOptions="Center" />
-
-                <!-- Bloc de sortie (Cible) -->
-                <Border Stroke="#27272A"
-                        StrokeThickness="1"
-                        StrokeShape="RoundRectangle 20"
-                        BackgroundColor="#18181B"
-                        Padding="16">
-                    <VerticalStackLayout Spacing="8">
-                        <Picker x:Name="pickerToUnit"
-                                TextColor="#A1A1AA"
-                                SelectedIndexChanged="OnInputValuesChanged" />
-                        <Label x:Name="lblToResult"
-                               Text="0"
-                               FontSize="32"
-                               FontAttributes="Bold"
-                               TextColor="#512BD4"
-                               HorizontalTextAlignment="End" />
-                    </VerticalStackLayout>
-                </Border>
-
-            </VerticalStackLayout>
+        <!-- 2. Puces de catégories horizontales (Pills) -->
+        <ScrollView Grid.Row="1" Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
+            <HorizontalStackLayout Spacing="8">
+                <Button x:Name="btnCatLength" Text="Longueur" Clicked="OnCategorySelected"
+                        BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
+                <Button x:Name="btnCatMass" Text="Masse" Clicked="OnCategorySelected"
+                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
+                <Button x:Name="btnCatTemp" Text="Température" Clicked="OnCategorySelected"
+                        BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="20" HeightRequest="38" Padding="14, 0" />
+            </HorizontalStackLayout>
         </ScrollView>
+
+        <!-- 3. Cartes d'unités (Source et Cible) -->
+        <VerticalStackLayout Grid.Row="2" Spacing="8" VerticalOptions="Center">
+            
+            <!-- Carte Source -->
+            <Border Stroke="#27272A" StrokeThickness="1" StrokeShape="RoundRectangle 16" BackgroundColor="#141416" Padding="14, 10">
+                <Grid ColumnDefinitions="Auto, *">
+                    <Picker x:Name="pickerFrom" Grid.Column="0" TextColor="#A1A1AA" FontSize="16" SelectedIndexChanged="OnUnitChanged" />
+                    <Label x:Name="lblFromVal" Grid.Column="1" Text="1" FontSize="36" FontAttributes="Bold" TextColor="#FFFFFF" HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
+                </Grid>
+            </Border>
+
+            <!-- Bouton d'inversion rapide -->
+            <Button Text="⇅ Inverser" Clicked="OnSwapUnitsClicked"
+                    BackgroundColor="Transparent" TextColor="#6D3EE4" FontSize="14" HorizontalOptions="Center" HeightRequest="32" Padding="0" />
+
+            <!-- Carte Cible -->
+            <Border Stroke="#512BD4" StrokeThickness="1.5" StrokeShape="RoundRectangle 16" BackgroundColor="#18181B" Padding="14, 10">
+                <Grid ColumnDefinitions="Auto, *">
+                    <Picker x:Name="pickerTo" Grid.Column="0" TextColor="#A1A1AA" FontSize="16" SelectedIndexChanged="OnUnitChanged" />
+                    <Label x:Name="lblToVal" Grid.Column="1" Text="1000" FontSize="36" FontAttributes="Bold" TextColor="#FAFAFA" HorizontalTextAlignment="End" VerticalTextAlignment="Center" />
+                </Grid>
+            </Border>
+        </VerticalStackLayout>
+
+        <!-- 4. Clavier de saisie direct (intégré pour fluidité mobile) -->
+        <Grid Grid.Row="3" RowSpacing="8" ColumnSpacing="10">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Button Text="7" Grid.Row="0" Grid.Column="0" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="8" Grid.Row="0" Grid.Column="1" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="9" Grid.Row="0" Grid.Column="2" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="C" Grid.Row="0" Grid.Column="3" Clicked="OnKeypadClear" BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="14" FontSize="18" FontAttributes="Bold" />
+
+            <Button Text="4" Grid.Row="1" Grid.Column="0" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="5" Grid.Row="1" Grid.Column="1" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="6" Grid.Row="1" Grid.Column="2" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="⌫" Grid.Row="1" Grid.Column="3" Clicked="OnKeypadBackspace" BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="14" FontSize="18" FontAttributes="Bold" />
+
+            <Button Text="1" Grid.Row="2" Grid.Column="0" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="2" Grid.Row="2" Grid.Column="1" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="3" Grid.Row="2" Grid.Column="2" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="±" Grid.Row="2" Grid.Column="3" Clicked="OnKeypadNegate" BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="14" FontSize="18" />
+
+            <Button Text="0" Grid.Row="3" Grid.Column="0" Grid.ColumnSpan="2" Clicked="OnKeypadDigit" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="." Grid.Row="3" Grid.Column="2" Clicked="OnKeypadDecimal" BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="14" FontSize="20" />
+            <Button Text="OK" Grid.Row="3" Grid.Column="3" Clicked="OnKeypadOk" BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="14" FontSize="18" FontAttributes="Bold" />
+        </Grid>
     </Grid>
 </ContentPage>

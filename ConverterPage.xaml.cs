@@ -4,10 +4,12 @@ namespace MauiCalculator;
 
 public partial class ConverterPage : ContentPage
 {
+    private int _currentCategory = 0; // 0: Longueur, 1: Masse, 2: Température
+
     public ConverterPage()
     {
         InitializeComponent();
-        pickerCategory.SelectedIndex = 0;
+        SetCategory(0);
     }
 
     private async void OnCalculatorTabTapped(object sender, EventArgs e)
@@ -15,81 +17,162 @@ public partial class ConverterPage : ContentPage
         await Shell.Current.GoToAsync("//MainPage");
     }
 
-    private void OnCategoryChanged(object sender, EventArgs e)
+    private void OnCategorySelected(object sender, EventArgs e)
     {
-        pickerFromUnit.Items.Clear();
-        pickerToUnit.Items.Clear();
+        var btn = (Button)sender;
+        if (btn == btnCatLength) SetCategory(0);
+        else if (btn == btnCatMass) SetCategory(1);
+        else if (btn == btnCatTemp) SetCategory(2);
+    }
 
-        switch (pickerCategory.SelectedIndex)
+    private void SetCategory(int index)
+    {
+        _currentCategory = index;
+
+        // Mise à jour visuelle des boutons onglets (pills)
+        btnCatLength.BackgroundColor = index == 0 ? Color.FromArgb("#512BD4") : Color.FromArgb("#1C1C1E");
+        btnCatLength.TextColor = index == 0 ? Colors.White : Color.FromArgb("#A1A1AA");
+
+        btnCatMass.BackgroundColor = index == 1 ? Color.FromArgb("#512BD4") : Color.FromArgb("#1C1C1E");
+        btnCatMass.TextColor = index == 1 ? Colors.White : Color.FromArgb("#A1A1AA");
+
+        btnCatTemp.BackgroundColor = index == 2 ? Color.FromArgb("#512BD4") : Color.FromArgb("#1C1C1E");
+        btnCatTemp.TextColor = index == 2 ? Colors.White : Color.FromArgb("#A1A1AA");
+
+        pickerFrom.Items.Clear();
+        pickerTo.Items.Clear();
+
+        switch (index)
         {
-            case 0: // Longueur
-                string[] lengthUnits = ["Mètre (m)", "Kilomètre (km)", "Centimètre (cm)", "Mile (mi)"];
-                foreach (var u in lengthUnits) { pickerFromUnit.Items.Add(u); pickerToUnit.Items.Add(u); }
-                pickerFromUnit.SelectedIndex = 0;
-                pickerToUnit.SelectedIndex = 1;
+            case 0:
+                string[] lengths = ["Mètre (m)", "Kilomètre (km)", "Centimètre (cm)", "Millimètre (mm)", "Mile (mi)"];
+                foreach (var item in lengths) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
+                pickerFrom.SelectedIndex = 0;
+                pickerTo.SelectedIndex = 1;
                 break;
-
-            case 1: // Masse
-                string[] massUnits = ["Kilogramme (kg)", "Gramme (g)", "Livre (lb)"];
-                foreach (var u in massUnits) { pickerFromUnit.Items.Add(u); pickerToUnit.Items.Add(u); }
-                pickerFromUnit.SelectedIndex = 0;
-                pickerToUnit.SelectedIndex = 1;
+            case 1:
+                string[] masses = ["Kilogramme (kg)", "Gramme (g)", "Milligramme (mg)", "Livre (lb)"];
+                foreach (var item in masses) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
+                pickerFrom.SelectedIndex = 0;
+                pickerTo.SelectedIndex = 1;
                 break;
-
-            case 2: // Température
-                string[] tempUnits = ["Celsius (°C)", "Fahrenheit (°F)"];
-                foreach (var u in tempUnits) { pickerFromUnit.Items.Add(u); pickerToUnit.Items.Add(u); }
-                pickerFromUnit.SelectedIndex = 0;
-                pickerToUnit.SelectedIndex = 1;
+            case 2:
+                string[] temps = ["Celsius (°C)", "Fahrenheit (°F)", "Kelvin (K)"];
+                foreach (var item in temps) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
+                pickerFrom.SelectedIndex = 0;
+                pickerTo.SelectedIndex = 1;
                 break;
         }
 
-        PerformConversion();
+        lblFromVal.Text = "1";
+        ComputeConversion();
     }
 
-    private void OnInputValuesChanged(object sender, EventArgs e)
+    private void OnUnitChanged(object sender, EventArgs e) => ComputeConversion();
+
+    private void OnSwapUnitsClicked(object sender, EventArgs e)
     {
-        PerformConversion();
+        int temp = pickerFrom.SelectedIndex;
+        pickerFrom.SelectedIndex = pickerTo.SelectedIndex;
+        pickerTo.SelectedIndex = temp;
+        ComputeConversion();
     }
 
-    private void PerformConversion()
+    private void OnKeypadDigit(object sender, EventArgs e)
     {
-        if (pickerFromUnit.SelectedIndex == -1 || pickerToUnit.SelectedIndex == -1) return;
-        if (!double.TryParse(txtFromValue.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double input))
+        string digit = ((Button)sender).Text;
+        if (lblFromVal.Text == "0") lblFromVal.Text = digit;
+        else lblFromVal.Text += digit;
+        ComputeConversion();
+    }
+
+    private void OnKeypadDecimal(object sender, EventArgs e)
+    {
+        if (!lblFromVal.Text.Contains('.'))
         {
-            lblToResult.Text = "-";
+            lblFromVal.Text += ".";
+            ComputeConversion();
+        }
+    }
+
+    private void OnKeypadClear(object sender, EventArgs e)
+    {
+        lblFromVal.Text = "0";
+        ComputeConversion();
+    }
+
+    private void OnKeypadBackspace(object sender, EventArgs e)
+    {
+        if (lblFromVal.Text.Length > 1)
+            lblFromVal.Text = lblFromVal.Text[..^1];
+        else
+            lblFromVal.Text = "0";
+        ComputeConversion();
+    }
+
+    private void OnKeypadNegate(object sender, EventArgs e)
+    {
+        if (double.TryParse(lblFromVal.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double v) && v != 0)
+        {
+            lblFromVal.Text = (-v).ToString(CultureInfo.InvariantCulture);
+            ComputeConversion();
+        }
+    }
+
+    private void OnKeypadOk(object sender, EventArgs e) => ComputeConversion();
+
+    private void ComputeConversion()
+    {
+        if (pickerFrom.SelectedIndex < 0 || pickerTo.SelectedIndex < 0) return;
+        if (!double.TryParse(lblFromVal.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double input))
+        {
+            lblToVal.Text = "0";
             return;
         }
 
-        double converted = 0;
-        int cat = pickerCategory.SelectedIndex;
-        int from = pickerFromUnit.SelectedIndex;
-        int to = pickerToUnit.SelectedIndex;
-
+        int from = pickerFrom.SelectedIndex;
+        int to = pickerTo.SelectedIndex;
         if (from == to)
         {
-            lblToResult.Text = input.ToString(CultureInfo.InvariantCulture);
+            lblToVal.Text = input.ToString(CultureInfo.InvariantCulture);
             return;
         }
 
-        if (cat == 0) // Longueur (base: Mètre)
+        double result = 0;
+
+        if (_currentCategory == 0) // Longueurs (Base: mètre)
         {
-            double[] toMeter = [1.0, 1000.0, 0.01, 1609.34];
-            double meters = input * toMeter[from];
-            converted = meters / toMeter[to];
+            double[] toBase = [1.0, 1000.0, 0.01, 0.001, 1609.344];
+            double meters = input * toBase[from];
+            result = meters / toBase[to];
         }
-        else if (cat == 1) // Masse (base: Gramme)
+        else if (_currentCategory == 1) // Masses (Base: gramme)
         {
-            double[] toGram = [1000.0, 1.0, 453.592];
-            double grams = input * toGram[from];
-            converted = grams / toGram[to];
+            double[] toBase = [1000.0, 1.0, 0.001, 453.59237];
+            double grams = input * toBase[from];
+            result = grams / toBase[to];
         }
-        else if (cat == 2) // Température
+        else if (_currentCategory == 2) // Températures
         {
-            if (from == 0 && to == 1) converted = (input * 9 / 5) + 32;       // C -> F
-            else if (from == 1 && to == 0) converted = (input - 32) * 5 / 9;  // F -> C
+            // Conversion vers Celsius d'abord
+            double celsius = from switch
+            {
+                0 => input,
+                1 => (input - 32.0) * 5.0 / 9.0,
+                2 => input - 273.15,
+                _ => input
+            };
+
+            // Conversion depuis Celsius vers cible
+            result = to switch
+            {
+                0 => celsius,
+                1 => (celsius * 9.0 / 5.0) + 32.0,
+                2 => celsius + 273.15,
+                _ => celsius
+            };
         }
 
-        lblToResult.Text = Math.Round(converted, 4).ToString(CultureInfo.InvariantCulture);
+        lblToVal.Text = Math.Round(result, 4).ToString(CultureInfo.InvariantCulture);
     }
 }
