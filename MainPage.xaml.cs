@@ -200,10 +200,65 @@ public partial class MainPage : ContentPage
         _hasError = false;
     }
 
+	private void OnSqrtClicked(object sender, EventArgs e)
+    {
+        if (_hasError) return;
+        if (double.TryParse(lblDisplay.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+        {
+            if (val < 0)
+            {
+                lblDisplay.Text = "Error: Negative root";
+                _hasError = true;
+                return;
+            }
+            double res = Math.Sqrt(val);
+            AddHistoryItem($"√({val}) = {res.ToString(CultureInfo.InvariantCulture)}");
+            lblDisplay.Text = res.ToString(CultureInfo.InvariantCulture);
+            _isNewEntry = true;
+        }
+    }
+
+    private void OnSquareClicked(object sender, EventArgs e)
+    {
+        if (_hasError) return;
+        if (double.TryParse(lblDisplay.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+        {
+            double res = Math.Pow(val, 2);
+            AddHistoryItem($"sqr({val}) = {res.ToString(CultureInfo.InvariantCulture)}");
+            lblDisplay.Text = res.ToString(CultureInfo.InvariantCulture);
+            _isNewEntry = true;
+        }
+    }
+
+    private void OnReciprocalClicked(object sender, EventArgs e)
+    {
+        if (_hasError) return;
+        if (double.TryParse(lblDisplay.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double val))
+        {
+            if (val == 0)
+            {
+                lblDisplay.Text = "Division by 0 is not possible";
+                _hasError = true;
+                return;
+            }
+            double res = 1.0 / val;
+            AddHistoryItem($"1/({val}) = {res.ToString(CultureInfo.InvariantCulture)}");
+            lblDisplay.Text = res.ToString(CultureInfo.InvariantCulture);
+            _isNewEntry = true;
+        }
+    }
+
+    private void OnPiClicked(object sender, EventArgs e)
+    {
+        if (_hasError) ResetCalculator();
+        lblDisplay.Text = Math.PI.ToString(CultureInfo.InvariantCulture);
+        _isNewEntry = true;
+    }
+
     private async void OnOptionsMenuTapped(object sender, EventArgs e)
     {
         string action = await DisplayActionSheet("Options", "Cancel", null, "Clear calculation history");
-        if (action == "Effacer l'historique des calculs")
+        if (action == "Clear calculation history")
         {
             historyContainer.Children.Clear();
         }

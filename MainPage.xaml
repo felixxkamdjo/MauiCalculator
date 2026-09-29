@@ -68,14 +68,16 @@
             </VerticalStackLayout>
         </ScrollView>
 
+
         <!-- build the numeric keypad -->
-        <Grid Grid.Row="2" RowSpacing="12" ColumnSpacing="12">
+        <Grid Grid.Row="2" RowSpacing="10" ColumnSpacing="10">
             <Grid.RowDefinitions>
-                <RowDefinition Height="64" />
-                <RowDefinition Height="64" />
-                <RowDefinition Height="64" />
-                <RowDefinition Height="64" />
-                <RowDefinition Height="64" />
+                <RowDefinition Height="56" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
+                <RowDefinition Height="60" />
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
@@ -85,53 +87,63 @@
             </Grid.ColumnDefinitions>
 
             <!-- display row 0 -->
-            <Button Text="C" Grid.Row="0" Grid.Column="0" Clicked="OnClearClicked"
-                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
-            <Button Text="⌫" Grid.Row="0" Grid.Column="1" Clicked="OnDeleteClicked"
-                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
-            <Button Text="%" Grid.Row="0" Grid.Column="2" Clicked="OnPercentageClicked"
-                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
-            <Button Text="÷" Grid.Row="0" Grid.Column="3" Clicked="OnOperatorClicked"
-                    BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
+            <Button Text="√" Grid.Row="0" Grid.Column="0" Clicked="OnSqrtClicked"
+                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="20" />
+            <Button Text="x²" Grid.Row="0" Grid.Column="1" Clicked="OnSquareClicked"
+                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="18" />
+            <Button Text="1/x" Grid.Row="0" Grid.Column="2" Clicked="OnReciprocalClicked"
+                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="16" />
+            <Button Text="π" Grid.Row="0" Grid.Column="3" Clicked="OnPiClicked"
+                    BackgroundColor="#1F1F23" TextColor="#A1A1AA" CornerRadius="14" FontSize="18" />
 
-            <!-- display row 1 -->
-            <Button Text="7" Grid.Row="1" Grid.Column="0" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="8" Grid.Row="1" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="9" Grid.Row="1" Grid.Column="2" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="x" Grid.Row="1" Grid.Column="3" Clicked="OnOperatorClicked"
+            <!-- display row 1: controls & division -->
+            <Button Text="C" Grid.Row="1" Grid.Column="0" Clicked="OnClearClicked"
+                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
+            <Button Text="⌫" Grid.Row="1" Grid.Column="1" Clicked="OnDeleteClicked"
+                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
+            <Button Text="%" Grid.Row="1" Grid.Column="2" Clicked="OnPercentageClicked"
+                    BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
+            <Button Text="÷" Grid.Row="1" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
 
             <!-- display row 2 -->
-            <Button Text="4" Grid.Row="2" Grid.Column="0" Clicked="OnDigitClicked"
+            <Button Text="7" Grid.Row="2" Grid.Column="0" Clicked="OnDigitClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="5" Grid.Row="2" Grid.Column="1" Clicked="OnDigitClicked"
+            <Button Text="8" Grid.Row="2" Grid.Column="1" Clicked="OnDigitClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="6" Grid.Row="2" Grid.Column="2" Clicked="OnDigitClicked"
+            <Button Text="9" Grid.Row="2" Grid.Column="2" Clicked="OnDigitClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="-" Grid.Row="2" Grid.Column="3" Clicked="OnOperatorClicked"
-                    BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="26" FontAttributes="Bold" />
-
-            <!-- display row 3 -->
-            <Button Text="1" Grid.Row="3" Grid.Column="0" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="2" Grid.Row="3" Grid.Column="1" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="3" Grid.Row="3" Grid.Column="2" Clicked="OnDigitClicked"
-                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="+" Grid.Row="3" Grid.Column="3" Clicked="OnOperatorClicked"
+            <Button Text="×" Grid.Row="2" Grid.Column="3" Clicked="OnOperatorClicked"
                     BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
 
+            <!-- display row 3 -->
+            <Button Text="4" Grid.Row="3" Grid.Column="0" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="5" Grid.Row="3" Grid.Column="1" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="6" Grid.Row="3" Grid.Column="2" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="-" Grid.Row="3" Grid.Column="3" Clicked="OnOperatorClicked"
+                    BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="26" FontAttributes="Bold" />
+
             <!-- display row 4 -->
-            <Button Text="±" Grid.Row="4" Grid.Column="0" Clicked="OnNegateClicked"
+            <Button Text="1" Grid.Row="4" Grid.Column="0" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="2" Grid.Row="4" Grid.Column="1" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="3" Grid.Row="4" Grid.Column="2" Clicked="OnDigitClicked"
+                    BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
+            <Button Text="+" Grid.Row="4" Grid.Column="3" Clicked="OnOperatorClicked"
+                    BackgroundColor="#512BD4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
+
+            <!-- display row 5 -->
+            <Button Text="±" Grid.Row="5" Grid.Column="0" Clicked="OnNegateClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" />
-            <Button Text="0" Grid.Row="4" Grid.Column="1" Clicked="OnDigitClicked"
+            <Button Text="0" Grid.Row="5" Grid.Column="1" Clicked="OnDigitClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="." Grid.Row="4" Grid.Column="2" Clicked="OnDecimalClicked"
+            <Button Text="." Grid.Row="5" Grid.Column="2" Clicked="OnDecimalClicked"
                     BackgroundColor="#18181B" TextColor="#FAFAFA" CornerRadius="16" FontSize="22" />
-            <Button Text="=" Grid.Row="4" Grid.Column="3" Clicked="OnEqualsClicked"
+            <Button Text="=" Grid.Row="5" Grid.Column="3" Clicked="OnEqualsClicked"
                     BackgroundColor="#6D3EE4" TextColor="#FFFFFF" CornerRadius="16" FontSize="24" FontAttributes="Bold" />
         </Grid>
     </Grid>
