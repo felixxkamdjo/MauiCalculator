@@ -7,10 +7,10 @@
              BackgroundColor="#000000">
 
     <Grid>
-        <!-- Main Calculator Layout -->
+        <!-- main calculator layoout -->
         <Grid RowDefinitions="Auto, *, 410" Padding="16, 12, 16, 16" RowSpacing="10">
 
-            <!-- 1. Top Header: Navigation Tabs & Options Menu -->
+            <!-- top header -->
             <Grid Grid.Row="0" ColumnDefinitions="*, Auto" Margin="0, 4, 0, 4">
                 <HorizontalStackLayout Grid.Column="0" Spacing="24" VerticalOptions="Center">
                     <Label Text="Calculator"
@@ -39,23 +39,23 @@
                 </Label>
             </Grid>
 
-            <!-- 2. Computation History Stream & Main Display -->
+            <!-- computation history -->
             <ScrollView Grid.Row="1"
                         x:Name="scrollHistory"
                         VerticalOptions="End"
                         VerticalScrollBarVisibility="Never">
                 <VerticalStackLayout Spacing="6" HorizontalOptions="Fill">
-                    <!-- Dynamic Past Calculations Container -->
+                    <!-- dynamic history container -->
                     <VerticalStackLayout x:Name="historyContainer" Spacing="6" />
 
-                    <!-- Current Expression In Progress -->
+                    <!-- current expression -->
                     <Label x:Name="lblEquation"
                            Text=""
                            FontSize="20"
                            TextColor="#A1A1AA"
                            HorizontalTextAlignment="End" />
 
-                    <!-- Main Display with Horizontal Scroll & Visual Active Cursor -->
+                    <!-- main display -->
                     <ScrollView Orientation="Horizontal" HorizontalScrollBarVisibility="Never">
                         <HorizontalStackLayout HorizontalOptions="End" VerticalOptions="Center">
                             <Label x:Name="lblDisplay"
@@ -75,7 +75,7 @@
                 </VerticalStackLayout>
             </ScrollView>
 
-            <!-- 3. Keypad Matrix -->
+            <!-- keypad -->
             <Grid Grid.Row="2"
                   RowSpacing="8"
                   ColumnSpacing="10"
@@ -95,7 +95,7 @@
                     <ColumnDefinition Width="*" />
                 </Grid.ColumnDefinitions>
 
-                <!-- Row 0: Scientific Operations -->
+                <!-- Row 0: scientific calculations -->
                 <Button Text="√" Grid.Row="0" Grid.Column="0" Clicked="OnSqrtClicked"
                         BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="19" />
                 <Button Text="x²" Grid.Row="0" Grid.Column="1" Clicked="OnSquareClicked"
@@ -105,7 +105,7 @@
                 <Button Text="π" Grid.Row="0" Grid.Column="3" Clicked="OnPiClicked"
                         BackgroundColor="#1C1C1E" TextColor="#A1A1AA" CornerRadius="16" FontSize="17" />
 
-                <!-- Row 1: Clear, Delete, Modulo & Division -->
+                <!-- Row 1: clear, delete, modulo, division -->
                 <Button Text="C" Grid.Row="1" Grid.Column="0" Clicked="OnClearClicked"
                         BackgroundColor="#27272A" TextColor="#FAFAFA" CornerRadius="16" FontSize="20" FontAttributes="Bold" />
                 <Button Text="⌫" Grid.Row="1" Grid.Column="1" Clicked="OnDeleteClicked"
@@ -157,7 +157,7 @@
             </Grid>
         </Grid>
 
-        <!-- Custom Dark Modal Overlay for Clear History Confirmation -->
+        <!-- modal overlay -->
         <Grid x:Name="modalOverlay"
               IsVisible="False"
               BackgroundColor="#AA000000">

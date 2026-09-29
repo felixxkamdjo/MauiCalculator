@@ -4,7 +4,7 @@ namespace MauiCalculator;
 
 public partial class ConverterPage : ContentPage
 {
-    private int _currentCategory = 0; // 0: Length, 1: Mass, 2: Temperature
+    private int _currentCategory = 0; // length, mass, temperature
 
     public ConverterPage()
     {
@@ -48,6 +48,18 @@ public partial class ConverterPage : ContentPage
         btnCatTemp.BackgroundColor = index == 2 ? Color.FromArgb("#512BD4") : Color.FromArgb("#1C1C1E");
         btnCatTemp.TextColor = index == 2 ? Colors.White : Color.FromArgb("#A1A1AA");
 
+        // disable the negate button for length and mass categories
+        if (_currentCategory == 0 || _currentCategory == 1)
+        {
+            btnNegate.Opacity = 0.35;
+            btnNegate.TextColor = Color.FromArgb("#71717A");
+        }
+        else
+        {
+            btnNegate.Opacity = 1.0;
+            btnNegate.TextColor = Color.FromArgb("#FAFAFA");
+        }
+
         pickerFrom.Items.Clear();
         pickerTo.Items.Clear();
 
@@ -60,7 +72,7 @@ public partial class ConverterPage : ContentPage
                 pickerTo.SelectedIndex = 1;
                 break;
             case 1:
-                string[] masses = ["Kilogram (kg)", "Gram (g)", "Milligram (mg)", "Pound (lb)"];
+                string[] masses = ["Kilogram (kg)", "Gramme (g)", "Milligramme (mg)", "Pound (lb)"];
                 foreach (var item in masses) { pickerFrom.Items.Add(item); pickerTo.Items.Add(item); }
                 pickerFrom.SelectedIndex = 0;
                 pickerTo.SelectedIndex = 1;
@@ -75,6 +87,39 @@ public partial class ConverterPage : ContentPage
 
         lblFromVal.Text = "1";
         ComputeConversion();
+    }
+
+    private void OnKeypadNegate(object sender, EventArgs e)
+    {
+        if (_currentCategory == 0)
+        {
+            ShowModal("Invalid Operation", "Length and distance measurements cannot be negative.");
+            return;
+        }
+
+        if (_currentCategory == 1)
+        {
+            ShowModal("Invalid Operation", "Mass and weight measurements cannot be negative.");
+            return;
+        }
+
+        if (double.TryParse(lblFromVal.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double v) && v != 0)
+        {
+            lblFromVal.Text = (-v).ToString(CultureInfo.InvariantCulture);
+            ComputeConversion();
+        }
+    }
+
+    private void ShowModal(string title, string message)
+    {
+        lblModalTitle.Text = title;
+        lblModalMessage.Text = message;
+        modalOverlay.IsVisible = true;
+    }
+
+    private void OnCloseModalClicked(object sender, EventArgs e)
+    {
+        modalOverlay.IsVisible = false;
     }
 
     private void OnUnitChanged(object sender, EventArgs e) => ComputeConversion();
@@ -119,15 +164,6 @@ public partial class ConverterPage : ContentPage
         ComputeConversion();
     }
 
-    private void OnKeypadNegate(object sender, EventArgs e)
-    {
-        if (double.TryParse(lblFromVal.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double v) && v != 0)
-        {
-            lblFromVal.Text = (-v).ToString(CultureInfo.InvariantCulture);
-            ComputeConversion();
-        }
-    }
-
     private void OnKeypadOk(object sender, EventArgs e) => ComputeConversion();
 
     private void ComputeConversion()
@@ -149,19 +185,19 @@ public partial class ConverterPage : ContentPage
 
         double result = 0;
 
-        if (_currentCategory == 0) // Length
+        if (_currentCategory == 0) // length
         {
             double[] toBase = [1.0, 1000.0, 0.01, 0.001, 1609.344];
             double meters = input * toBase[from];
             result = meters / toBase[to];
         }
-        else if (_currentCategory == 1) // Mass
+        else if (_currentCategory == 1) // mass
         {
             double[] toBase = [1000.0, 1.0, 0.001, 453.59237];
             double grams = input * toBase[from];
             result = grams / toBase[to];
         }
-        else if (_currentCategory == 2) // Temperature
+        else if (_currentCategory == 2) // temperature
         {
             double celsius = from switch
             {
