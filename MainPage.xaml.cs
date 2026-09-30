@@ -271,6 +271,43 @@ public partial class MainPage : ContentPage
         _hasError = false;
     }
 
+	private void OnPageSizeChanged(object? sender, EventArgs e)
+    {
+        if (Width <= 0 || Height <= 0) return;
+
+        bool isLandscape = Width > Height;
+
+        mainGrid.RowDefinitions.Clear();
+        mainGrid.ColumnDefinitions.Clear();
+
+        if (isLandscape)
+        {
+            // landscape mode
+            mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1.1, GridUnitType.Star)));
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1.0, GridUnitType.Star)));
+
+            Grid.SetRow(displaySection, 0);
+            Grid.SetColumn(displaySection, 0);
+
+            Grid.SetRow(keypadGrid, 0);
+            Grid.SetColumn(keypadGrid, 1);
+        }
+        else
+        {
+            // portrait mode
+            mainGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+            mainGrid.RowDefinitions.Add(new RowDefinition(new GridLength(1.4, GridUnitType.Star)));
+            mainGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+
+            Grid.SetRow(displaySection, 0);
+            Grid.SetColumn(displaySection, 0);
+
+            Grid.SetRow(keypadGrid, 1);
+            Grid.SetColumn(keypadGrid, 0);
+        }
+    }
+
     private void OnOpenModalClicked(object sender, EventArgs e)
     {
         modalOverlay.IsVisible = true;

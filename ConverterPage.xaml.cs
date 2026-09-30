@@ -218,4 +218,41 @@ public partial class ConverterPage : ContentPage
 
         lblToVal.Text = Math.Round(result, 4).ToString(CultureInfo.InvariantCulture);
     }
+
+	private void OnConverterPageSizeChanged(object? sender, EventArgs e)
+    {
+        if (Width <= 0 || Height <= 0) return;
+
+        bool isLandscape = Width > Height;
+
+        converterGrid.RowDefinitions.Clear();
+        converterGrid.ColumnDefinitions.Clear();
+
+        if (isLandscape)
+        {
+            // landscape mode
+            converterGrid.RowDefinitions.Add(new RowDefinition(GridLength.Star));
+            converterGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1.1, GridUnitType.Star)));
+            converterGrid.ColumnDefinitions.Add(new ColumnDefinition(new GridLength(1.0, GridUnitType.Star)));
+
+            Grid.SetRow(cardsSection, 0);
+            Grid.SetColumn(cardsSection, 0);
+
+            Grid.SetRow(converterKeypad, 0);
+            Grid.SetColumn(converterKeypad, 1);
+        }
+        else
+        {
+            // portrait mode
+            converterGrid.RowDefinitions.Add(new RowDefinition(new GridLength(1.1, GridUnitType.Star)));
+            converterGrid.RowDefinitions.Add(new RowDefinition(new GridLength(1.3, GridUnitType.Star)));
+            converterGrid.ColumnDefinitions.Add(new ColumnDefinition(GridLength.Star));
+
+            Grid.SetRow(cardsSection, 0);
+            Grid.SetColumn(cardsSection, 0);
+
+            Grid.SetRow(converterKeypad, 1);
+            Grid.SetColumn(converterKeypad, 0);
+        }
+    }
 }
