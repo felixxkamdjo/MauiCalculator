@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <!-- Symbole 1 : Plus (+) en haut à gauche -->
+  <path d="M190 120 H150 V190 H80 V230 H150 V300 H190 V230 H260 V190 H190 Z" 
+        fill="#FFFFFF"/>
+
+  <!-- Symbole 2 : Multiplication (×) en haut à droite -->
+  <g transform="translate(350, 210) rotate(45)">
+    <rect x="-65" y="-18" width="130" height="36" rx="10" fill="#6D3EE4"/>
+    <rect x="-18" y="-65" width="36" height="130" rx="10" fill="#6D3EE4"/>
+  </g>
+
+  <!-- Symbole 3 : Égal (=) en bas avec nouvelle couleur accentuée (#8B5CF6) -->
+  <rect x="110" y="340" width="292" height="40" rx="14" fill="#8B5CF6"/>
+  <rect x="110" y="406" width="292" height="40" rx="14" fill="#8B5CF6"/>
+</svg>
